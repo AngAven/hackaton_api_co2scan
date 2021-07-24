@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
         if (err) {
             res.status(500).send('💥 BOOOM 💥: ' + err);
         } else {
-            res.send('Mongoo coneccted! 😎');
+            res.send('¡Mongoo coneccted! 😎');
             db.close();
         }
     });

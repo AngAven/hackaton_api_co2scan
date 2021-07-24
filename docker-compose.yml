@@ -3,8 +3,6 @@ version: "3.9"
 services:
   app:
     build: .
-    ports:
-      - "3000:3000"
     environment:
       MONGO_URL: "mongodb://db:27017/test"
       ENV: "development"
@@ -12,10 +10,10 @@ services:
     depends_on:
       - db
     volumes:
-      - /Users/angaven/code/tools/cfc-hackaton-2021/index.js:/usr/src/index.js
+      - ./index.js:/usr/src/index.js
   db:
     image: mongo
 networks:
   default:
     external: true
-    name: local
+    name: apps
