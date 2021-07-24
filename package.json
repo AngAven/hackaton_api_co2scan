@@ -1,0 +1,19 @@
+{
+  "name": "api-cfc-2021",
+  "version": "1.0.0",
+  "description": "API for Carbono calculator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CallForCode-Team7/api_cfc.git"
+  },
+  "author": "@nagaven",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CallForCode-Team7/api_cfc/issues"
+  },
+  "homepage": "https://github.com/CallForCode-Team7/api_cfc#readme"
+}
