@@ -1,4 +1,5 @@
 const express = require('express')
+const asinValidationNumber = require('../utils/middleware/asinValidationNumber')
 
 function productsAPI(app){
     const router = express.Router()
@@ -18,17 +19,17 @@ function productsAPI(app){
         }
     })
 
-    router.post('/',(req, res, next) => {
+    router.post('/', asinValidationNumber(), (req, res, next) => {
         const { body: productRequested } = req
-        try {
-            console.log('Product requested ===>', productRequested)
-            res.status(201).json({
-                data: {"algo": "otro"},
-                message: 'Product Submited'
-            })
-        } catch (e) {
-            next(e)
-        }
+
+            try {
+                res.status(201).json({
+                    data: {"algo": "otro"},
+                    message: 'Product Submited'
+                })
+            } catch (e) {
+                next(e)
+            }
     })
 }
 
