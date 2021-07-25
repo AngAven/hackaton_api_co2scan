@@ -66,15 +66,33 @@ function productsAPI(app){
                     const baseURL = 'https://www.amazon.com.mx/'
                     const similarProducts = []
                     const product = []
+                    const $product = document.querySelector('#ppd')
                     const $similarProducts = document.querySelectorAll('.comparison_table_image_row th')
 
+                    // Fill product
+                    const carbono_per_unit = Math.floor((Math.random() * 1000) + 1)
+                    const items_buyed_unit_until_now = Math.floor((Math.random() * 10000) + 1)
+                    product.push({
+                        asin_number: productASIN,
+                        product_name: $product.querySelector('#centerCol').querySelector('#productTitle').textContent.trim(),
+                        product_description: '',
+                        product_image: $product.querySelector('#leftCol').querySelector('#imgTagWrapperId img').getAttribute('src'),
+                        product_url: baseURL + 'dp/' +productASIN,
+                        carbono_per_unit,
+                        items_buyed_unit_until_now,
+                        carbono_total_accumulated: carbono_per_unit * items_buyed_unit_until_now,
+
+                    })
+
+                    // Fill similar products
                     $similarProducts.forEach($product => {
                         if ($product.getAttribute('data-asin').trim() !== productASIN.trim()){
                             similarProducts.push({
                                 asin_number: $product.getAttribute('data-asin'),
                                 product_name: $product.querySelector('.a-size-base').textContent,
                                 product_url: baseURL + $product.querySelector('.a-link-normal').getAttribute("href"),
-                                product_image: $product.querySelector('img').getAttribute('src')
+                                product_image: $product.querySelector('img').getAttribute('src'),
+                                carbono_per_unit: Math.floor((Math.random() * 1000) + 1)
                             })
                         }
                     })
