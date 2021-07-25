@@ -1,20 +1,26 @@
 function validate(req){
     const { body: productRequested } = req
-    const regex = new RegExp(/\w{10}/);
+    const jsonASINRequest = JSON.stringify(productRequested)
+    const regex = new RegExp(/\w{10}/)
 
-    console.log("Evaluation Regex ==>", regex.test(productRequested.ASIN))
-
-    if (regex.test(productRequested.ASIN)){
-
-    } else {
-        return new Error(
-            `Error Message: Can't evaluated ASIN number`);
-    }
+    const asinNumberValid = JSON.parse(jsonASINRequest, (key, value) => {
+        if (key === 'asin'){
+            if (regex.test(value)) {
+                return value.toUpperCase();
+            }
+            return true
+        }
+        return value;
+    })
+    console.log('ASIN numbers validated')
+    return false
 }
+
 function asinValidationNumber(){
     return function(req, res, next){
         const error = validate(req)
         error ? next(error) : next()
+        next()
     }
 }
 
