@@ -12,25 +12,6 @@ if (!ENV){
     PORT = config.PORT
 }
 
-// const MongoClient = require('mongodb').MongoClient
-
-// if ( ENV === 'development'){
-//     const mongoUrl = 'mongodb://localhost:27017/test';
-// }
-//
-// const mongoUrl = process.env.MONGO_URL
-//
-// app.get('/', (req, res) => {
-//     MongoClient.connect(mongoUrl, { useNewUrlParser: true }, (err, db) => {
-//         if (err) {
-//             res.status(500).send('💥 BOOOM 💥: ' + err);
-//         } else {
-//             res.send('¡Mongoo coneccted! 😎');
-//             db.close();
-//         }
-//     });
-// });
-
 app.use(express.json())
 productsAPI(app)
 
