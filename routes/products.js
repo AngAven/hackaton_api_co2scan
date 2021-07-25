@@ -2,7 +2,6 @@ const express = require('express')
 
 function productsAPI(app){
     const router = express.Router()
-    console.log('cargado')
 
     app.use('/api/products', router)
 
@@ -11,7 +10,7 @@ function productsAPI(app){
             const { tags } = req.query
             console.log('Tags ===>', tags)
             res.status(200).json({
-                data: {"product": "other"},
+                data: {"Products": "List"},
                 message: 'Movies listed'
             })
         } catch (e){
@@ -20,9 +19,9 @@ function productsAPI(app){
     })
 
     router.post('/',(req, res, next) => {
+        const { body: productRequested } = req
         try {
-            const { body: productSend } = req
-            console.log('Product send', productSend)
+            console.log('Product requested ===>', productRequested)
             res.status(201).json({
                 data: {"algo": "otro"},
                 message: 'Product Submited'

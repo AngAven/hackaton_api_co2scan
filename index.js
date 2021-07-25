@@ -1,5 +1,4 @@
 const express = require('express')
-const cors = require('cors')
 
 const { config } = require('./config/index')
 const productsAPI = require('./routes/products')
@@ -32,7 +31,7 @@ if (!ENV){
 //     });
 // });
 
-
+app.use(express.json())
 productsAPI(app)
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}! =>"${ENV}"<=`))
