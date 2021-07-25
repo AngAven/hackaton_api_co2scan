@@ -1,27 +1,38 @@
 const express = require('express')
 const cors = require('cors')
+
+const { config } = require('./config/index')
+const productsAPI = require('./routes/products')
+
 const app = express()
-const port = 3000
+let { ENV, PORT } = process.env
 
-const MongoClient = require('mongodb').MongoClient
-const { ENV, PORT } = process.env;
-
-// Connection URL
-if ( ENV === 'development'){
-    const mongoUrl = 'mongodb://localhost:27017/test';
+if (!ENV){
+    console.log('Sin definición de ambiente --- Configurando por defecto')
+    ENV = config.ENV
+    PORT = config.PORT
 }
 
-const mongoUrl = process.env.MONGO_URL
+// const MongoClient = require('mongodb').MongoClient
 
-app.get('/', (req, res) => {
-    MongoClient.connect(mongoUrl, { useNewUrlParser: true }, (err, db) => {
-        if (err) {
-            res.status(500).send('💥 BOOOM 💥: ' + err);
-        } else {
-            res.send('¡Mongoo coneccted! 😎');
-            db.close();
-        }
-    });
-});
+// if ( ENV === 'development'){
+//     const mongoUrl = 'mongodb://localhost:27017/test';
+// }
+//
+// const mongoUrl = process.env.MONGO_URL
+//
+// app.get('/', (req, res) => {
+//     MongoClient.connect(mongoUrl, { useNewUrlParser: true }, (err, db) => {
+//         if (err) {
+//             res.status(500).send('💥 BOOOM 💥: ' + err);
+//         } else {
+//             res.send('¡Mongoo coneccted! 😎');
+//             db.close();
+//         }
+//     });
+// });
 
-app.listen(port, () => console.log(`Server listening on port ${port}!`))
+
+productsAPI(app)
+
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}! =>"${ENV}"<=`))
