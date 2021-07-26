@@ -1,9 +1,11 @@
 const express = require('express')
 const puppeteer = require('puppeteer')
+const fs = require('fs')
 const asinValidationNumber = require('../utils/middleware/asinValidationNumber')
 const productsMock = require('../utils/data/fakeScrappingProducts')
 
 function productsAPI(app){
+    let $cart = [];
     const router = express.Router()
 
     app.use('/api/products', router)
@@ -53,13 +55,32 @@ function productsAPI(app){
 
     router.post('/cart', (req,res,next) => {
         const { body: cart } = req
+        // let products = JSON.parse(fs.readFileSync('products.json', 'utf8'))
+        //
+        // products({
+        //     products: JSON.stringify(cart)
+        // })
+        //
+        // fs.writeFile('products.json', JSON.stringify(cart), error => {
+        //     console.log(error)
+        //     next(error)
+        // })
 
+        $cart.push(cart)
         try {
-            res.status(201).json(cart)
+            res.status(201).json($cart)
         } catch (e) {
             next(e)
         }
     } )
+
+    router.get('/cart', (req, res, next) => {
+        try {
+            res.status(200).json($cart)
+        } catch (e){
+            next(e)
+        }
+    })
 
     router.get('/:productASIN', (req, res, next) => {
         const { productASIN } = req.params
