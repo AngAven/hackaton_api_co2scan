@@ -51,6 +51,16 @@ function productsAPI(app){
         }
     })
 
+    router.post('/cart', (req,res,next) => {
+        const { body: cart } = req
+
+        try {
+            res.status(201).json(cart)
+        } catch (e) {
+            next(e)
+        }
+    } )
+
     router.get('/:productASIN', (req, res, next) => {
         const { productASIN } = req.params
         const url = 'https://www.amazon.com.mx/dp/' + productASIN
