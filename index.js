@@ -1,4 +1,5 @@
 const express = require('express')
+const coors = require('cors')
 
 const { config } = require('./config/index')
 const productsAPI = require('./routes/products')
@@ -12,6 +13,7 @@ if (!ENV){
     PORT = config.PORT
 }
 
+app.use(coors())
 app.use(express.json())
 productsAPI(app)
 
