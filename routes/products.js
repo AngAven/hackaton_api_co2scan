@@ -5,7 +5,7 @@ const asinValidationNumber = require('../utils/middleware/asinValidationNumber')
 const productsMock = require('../utils/data/fakeScrappingProducts')
 
 function productsAPI(app){
-    let $cart = [];
+    let $cart = []; // Retirar
     const router = express.Router()
 
     app.use('/api/products', router)
