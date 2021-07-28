@@ -87,7 +87,12 @@ function productsAPI(app){
         const url = 'https://www.amazon.com.mx/dp/' + productASIN
 
         async function run(){
-            const browser = await puppeteer.launch()
+            const browser = await puppeteer.launch({
+                    args: [
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox'
+                    ]
+            })
             const page = await browser.newPage()
 
             async function getData(){
