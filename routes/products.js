@@ -1,5 +1,6 @@
 const express = require('express')
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer-extra')
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 const fs = require('fs')
 const asinValidationNumber = require('../utils/middleware/asinValidationNumber')
 const productsMock = require('../utils/data/fakeScrappingProducts')
@@ -9,6 +10,7 @@ function productsAPI(app){
     const router = express.Router()
 
     app.use('/api/products', router)
+    puppeteer.use(StealthPlugin())
 
     router.get('/', (req, res, next) => {
         try {
@@ -98,22 +100,29 @@ function productsAPI(app){
             async function getData(){
                 await page.goto(`${url}`)
 
-                try {
+                // try {
                     const data = await page.evaluate((productASIN) => {
                         const baseURL = 'https://www.amazon.com.mx/'
                         const similarProducts = []
-                        const product = []
+                        const productInfo = []
                         const $product = document.querySelector('#ppd')
                         const $similarProducts = document.querySelectorAll('.comparison_table_image_row th')
 
                         // Fill product
+                        const messageNoDataAviable ='No data aviable'
+                        const product_name = $product.querySelector('#centerCol').querySelector('#productTitle').textContent.trim()
+                        const product_image = $product.querySelector('#leftCol').querySelector('#imgTagWrapperId img').getAttribute('src')
                         const carbono_per_unit = Math.floor((Math.random() * 1000) + 1)
                         const items_buyed_unit_until_now = Math.floor((Math.random() * 10000) + 1)
-                        product.push({
+                        productInfo.push({
                             asin_number: productASIN,
-                            product_name: $product.querySelector('#centerCol').querySelector('#productTitle').textContent.trim(),
+                            product_name: product_name
+                                ? product_name
+                                : messageNoDataAviable,
                             product_description: '',
-                            product_image: $product.querySelector('#leftCol').querySelector('#imgTagWrapperId img').getAttribute('src'),
+                            product_image: product_image
+                                ? product_image
+                                : messageNoDataAviable,
                             product_url: baseURL + 'dp/' +productASIN,
                             carbono_per_unit,
                             items_buyed_unit_until_now,
@@ -122,41 +131,56 @@ function productsAPI(app){
                         })
 
                         // Fill similar products
-                        $similarProducts.forEach($product => {
-                            if ($product.getAttribute('data-asin').trim() !== productASIN.trim()){
+                        $similarProducts.forEach(similarProduct => {
+                            if (similarProduct.getAttribute('data-asin').trim() !== productASIN.trim()){
+                                const messageNoDataAviable ='No data aviable'
+                                const asin_number = similarProduct.getAttribute('data-asin')
+                                const product_url = similarProduct.querySelector('.a-link-normal').getAttribute("href")
+                                const product_name = similarProduct.querySelector('.a-size-base').textContent
+                                const product_image = similarProduct.querySelector('img').getAttribute('src')
+
                                 similarProducts.push({
-                                    asin_number: $product.getAttribute('data-asin'),
-                                    product_name: $product.querySelector('.a-size-base').textContent,
-                                    product_url: baseURL + $product.querySelector('.a-link-normal').getAttribute("href"),
-                                    product_image: $product.querySelector('img').getAttribute('src'),
+                                    test: similarProduct.getAttribute('data-asin').trim(),
+                                    asin_number: asin_number
+                                        ? asin_number
+                                        : messageNoDataAviable,
+                                    product_name: product_name
+                                        ? product_name
+                                        : messageNoDataAviable,
+                                    product_url: product_url
+                                        ? baseURL + similarProduct.querySelector('.a-link-normal').getAttribute("href")
+                                        : messageNoDataAviable,
+                                    product_image: product_image
+                                        ? product_image
+                                        : messageNoDataAviable,
                                     carbono_per_unit: Math.floor((Math.random() * 1000) + 1)
                                 })
                             }
                         })
 
                         return {
-                            product,
+                            productInfo,
                             similarProducts
                         }
                     }, productASIN)
 
                     return data
-                } catch (error) {
-                    return error
-                }
+                // } catch (error) {
+                //     return error
+                // }
 
             }
 
-            try {
+            // try {
                 res.status(200).json(await getData())
                 await browser.close()
 
-            } catch (error) {
-                res.status(200).json({
-                    message: error
-                })
-                await browser.close()
-            }
+            // } catch (error) {
+            //     res.status(400).json({
+            //         message: error
+            //     })
+            //     await browser.close()
+            // }
 
         }
 
