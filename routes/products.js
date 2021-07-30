@@ -142,9 +142,17 @@ function productsAPI(app){
                 return data
             }
 
-            res.status(200).json(await getData())
+            try {
+                res.status(200).json(await getData())
+                await browser.close()
 
-            await browser.close()
+            } catch (error) {
+                res.status(200).json({
+                    message: error
+                })
+                await browser.close()
+            }
+
         }
 
         run()
